@@ -1,6 +1,4 @@
 
-
-
 import React, { useState, useEffect } from 'react';
 import Avatar from 'react-avatar';
 import { Line, Pie } from 'react-chartjs-2';
@@ -103,6 +101,12 @@ const Userdashboard = () => {
           ))}
         </div>
       </div>
+
+      <button className="px-6 py-3 bg-black text-white rounded-full hover:bg-gray-900 item-center"
+         > Upload Certificate
+          </button>
+
+
 
       {/* Certificates Section */}
       <div className="col-span-2 md:col-span-2 lg:col-span-2">
