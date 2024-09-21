@@ -8,6 +8,7 @@ import AddCourse from './Pages/Addcourse';
 import VerifyCertificate from './Pages/VerifyCertificate';
 import Certificate from './Pages/Certificate';
 import Home from './Pages/Home';
+import Userdashboard from './Pages/Userdashboard';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/addcourse" element={<AddCourse />} />
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/verify-certificate" element={<VerifyCertificate />} />
+        <Route path="/user" element={<Userdashboard />} />
       </>
     )
   );

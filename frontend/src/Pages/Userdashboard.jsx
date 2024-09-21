@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Avatar from 'react-avatar';
 import { Line, Pie } from 'react-chartjs-2';
@@ -8,6 +7,13 @@ import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 
 const Userdashboard = () => {
+  const [showUploadForm, setShowUploadForm] = useState(false);  // State to show/hide upload form
+  const [certificateDetails, setCertificateDetails] = useState({
+    name: '',
+    date: '',
+    file: null,
+  });
+
   const [userData] = useState({
     username: 'John Doe',
     metamaskAddress: '0x1234...abcd',
@@ -46,6 +52,32 @@ const Userdashboard = () => {
         hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
       },
     ],
+  };
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    const { name, value, files } = e.target;
+    setCertificateDetails((prevState) => ({
+      ...prevState,
+      [name]: files ? files[0] : value,
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission (e.g., upload to server or blockchain)
+    console.log('Uploading certificate:', certificateDetails);
+    // Reset form and hide upload form
+    setCertificateDetails({ name: '', date: '', file: null });
+    setShowUploadForm(false);
+  };
+
+  // Handle cancel action
+  const handleCancel = () => {
+    // Reset form and hide the upload form
+    setCertificateDetails({ name: '', date: '', file: null });
+    setShowUploadForm(false);
   };
 
   // Destroy charts properly using useEffect
@@ -102,11 +134,69 @@ const Userdashboard = () => {
         </div>
       </div>
 
-      <button className="px-6 py-3 bg-black text-white rounded-full hover:bg-gray-900 item-center"
-         > Upload Certificate
-          </button>
+      {/* Upload Certificate Button */}
+      <button
+        className="h-8 w-40 bg-black text-white rounded-full hover:bg-gray-900 item-center"
+        onClick={() => setShowUploadForm(true)}
+      >
+        Upload Certificate
+      </button>
 
-
+      {/* Show Upload Certificate Form */}
+      {showUploadForm && (
+        <div className="col-span-3 md:col-span-2 lg:col-span-2 bg-white p-4 shadow-md rounded-lg mt-6">
+          <h3 className="text-lg md:text-xl font-semibold mb-4">Upload Certificate</h3>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-700">Certificate Name</label>
+              <input
+                type="text"
+                name="name"
+                value={certificateDetails.name}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700">Date of Issue</label>
+              <input
+                type="date"
+                name="date"
+                value={certificateDetails.date}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700">Upload Certificate</label>
+              <input
+                type="file"
+                name="file"
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                required
+              />
+            </div>
+            <div className="flex space-x-4">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+              >
+                Submit
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Certificates Section */}
       <div className="col-span-2 md:col-span-2 lg:col-span-2">
@@ -114,7 +204,11 @@ const Userdashboard = () => {
         <div className="grid grid-cols-2 gap-4">
           {userData.nftCertificates.map((nft, index) => (
             <div key={index} className="bg-white shadow-md p-4 rounded-lg text-center">
-              <img src={`https://example.com/nfts/${nft}.png`} alt={nft} className="w-full h-24 md:h-32 object-cover mb-2" />
+              <img
+                src={`https://example.com/nfts/${nft}.png`}
+                alt={nft}
+                className="w-full h-24 md:h-32 object-cover mb-2"
+              />
               <p className="text-sm md:text-base">{nft}</p>
             </div>
           ))}
@@ -124,14 +218,13 @@ const Userdashboard = () => {
       {/* Tokens and Rewards */}
       <div className="col-span-1">
         <h3 className="text-lg md:text-xl font-semibold mb-4">Tokens & Rewards</h3>
-        <div className="bg-white shadow-md p-4 rounded-lg space-y-2">
-          <p>Balance: <strong>{userData.tokens}</strong> tokens</p>
-          <p>Redeem tokens for discounts or new courses!</p>
+        <div className="space-y-2">
+          <p>Total Tokens Earned: <strong>{userData.tokens}</strong></p>
         </div>
       </div>
 
       {/* Achievements */}
-      <div className="col-span-2 md:col-span-2 lg:col-span-2">
+      <div className="col-span-1">
         <h3 className="text-lg md:text-xl font-semibold mb-4">Achievements</h3>
         <div className="bg-white shadow-md p-4 rounded-lg space-y-2">
           <p>Digital Badges: <strong>{userData.badges.join(', ')}</strong></p>
@@ -160,6 +253,3 @@ const Userdashboard = () => {
 };
 
 export default Userdashboard;
-
-
-
