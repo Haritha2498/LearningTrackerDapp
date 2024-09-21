@@ -5,7 +5,7 @@ const Home = () => {
   const navigate = useNavigate();  // Use navigate hook for redirection
 
   const redirectToSignup = () => {
-    navigate('/signup');  // Redirect to signup page
+    navigate('/sign-up');  // Redirect to signup page
   };
 
   return (

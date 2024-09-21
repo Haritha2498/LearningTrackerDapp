@@ -38,9 +38,14 @@ const LoginPage = () => {
       if (res.ok) {
         const data = await res.json();
         const userType = data.userType;
+        console.log(userType)
 
-        // toast.success(`Logged in as : ${userType}`);
-        return navigate("/educatordashboard");
+        if (userType === "admin") 
+          return navigate("/educatordashboard");
+        else 
+        return navigate("/userdashboard");
+        
+        
       } else {
         // toast.error("Please check your credentials");
         return navigate("/");
