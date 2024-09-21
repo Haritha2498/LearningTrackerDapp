@@ -29,8 +29,14 @@ const VerifyCertificate = () => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen p-8">
-      <nav className="bg-gray-800 p-4 shadow-md w-full">
+    <div
+      className="flex flex-col items-center min-h-screen bg-cover bg-center p-8"
+      style={{
+        backgroundImage: "url('/src/assets/images/certificate-bg.jpg')",
+      }}
+    >
+      {/* Navbar */}
+      <nav className="bg-gray-800 p-4 w-full shadow-md">
         <div className="container mx-auto flex justify-end">
           <a href="/" className="text-white hover:text-blue-400">
             Home
@@ -38,12 +44,15 @@ const VerifyCertificate = () => {
         </div>
       </nav>
 
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg mt-10">
-        <h1 className="text-3xl font-bold text-center text-red-600 mb-6">
+      {/* Certificate Verification Form */}
+      <div className="bg-white bg-opacity-90 shadow-2xl rounded-lg p-8 w-full max-w-lg mt-10">
+        <h1 className="text-4xl font-extrabold text-center text-blue-600 mb-6">
           Verify Your Certificate
         </h1>
 
-        <label className="block text-lg mb-2">Certificate ID</label>
+        <label className="block text-lg mb-2 font-semibold text-gray-700">
+          Certificate ID
+        </label>
         <input
           type="text"
           value={certificateId}
@@ -54,13 +63,16 @@ const VerifyCertificate = () => {
 
         <button
           onClick={handleVerify}
-          className="w-full bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-500 transition duration-200"
+          className="w-full bg-gradient-to-r from-blue-600 to-blue-400 text-white rounded-lg px-4 py-2 hover:bg-blue-700 hover:shadow-lg transition duration-300"
         >
           {loading ? "Verifying..." : "Verify"}
         </button>
 
-        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-center mt-4 font-semibold">{error}</p>
+        )}
 
+        {/* Display Verification Result */}
         {verificationResult && (
           <div className="mt-6 border-t border-gray-200 pt-4">
             <p className="text-lg font-semibold text-green-600">
@@ -84,7 +96,11 @@ const VerifyCertificate = () => {
         )}
       </div>
 
-      <a href="/" className="mt-6 text-blue-600 underline">
+      {/* Back to Home Link */}
+      <a
+        href="/"
+        className="mt-6 text-blue-600 underline hover:text-blue-800 transition"
+      >
         Back to Home
       </a>
     </div>

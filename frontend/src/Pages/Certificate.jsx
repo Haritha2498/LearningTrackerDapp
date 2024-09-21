@@ -1,7 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import html2canvas from "html2canvas";
 
 const Certificate = ({ cname, course, date, grade }) => {
+  const downloadCertificate = () => {
+    const element = document.getElementById("certificate");
+    html2canvas(element).then((canvas) => {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "certificate.png"; // Set the filename for the download
+      link.click();
+    });
+  };
+
   return (
     <div
       className="flex flex-col items-center bg-cover bg-center min-h-screen p-8"
@@ -11,9 +22,9 @@ const Certificate = ({ cname, course, date, grade }) => {
       }}
     >
       {/* Navbar */}
-      <nav className="bg-while p-4 w-full shadow-md">
+      <nav className="bg-gray-800 p-4 w-full shadow-md">
         <div className="container mx-auto flex justify-between items-center">
-          <div className="text-blue text-lg font-bold">
+          <div className="text-white text-lg font-bold">
             <Link to="/">Learning Tracker</Link>
           </div>
           <div className="flex space-x-4">
@@ -39,7 +50,10 @@ const Certificate = ({ cname, course, date, grade }) => {
         </div>
       </nav>
 
-      <div className="flex flex-col items-center bg-white shadow-xl rounded-lg p-6 w-full max-w-3xl border-4 border-blue-500 mt-6">
+      <div
+        id="certificate"
+        className="flex flex-col items-center bg-white shadow-xl rounded-lg p-6 w-full max-w-3xl border-4 border-blue-500 mt-6"
+      >
         <img
           src="/src/assets/images/Dapp.png"
           alt="Academy Logo"
@@ -72,6 +86,14 @@ const Certificate = ({ cname, course, date, grade }) => {
           </p>
         </div>
       </div>
+
+      {/* Download Button */}
+      <button
+        onClick={downloadCertificate}
+        className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-500 transition duration-300"
+      >
+        Download Certificate
+      </button>
     </div>
   );
 };
@@ -80,8 +102,8 @@ const Certificate = ({ cname, course, date, grade }) => {
 const ExampleUsage = () => {
   const cname = "Student Name"; // Replace with actual student name
   const course = "Course Name"; // Replace with actual course name
-  const date = "2024-09-21"; // Fetch this dynamically
-  const grade = "A+"; // Fetch this dynamically
+  const date = "Date"; // Fetch this dynamically
+  const grade = "Grade"; // Fetch this dynamically
 
   return (
     <Certificate cname={cname} course={course} date={date} grade={grade} />
