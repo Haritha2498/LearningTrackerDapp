@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const EducatorDashboard = () => {
+const AdminDashboard = () => {
   const [courses, setCourses] = useState([]);
   const [certificates, setCertificates] = useState([]);
   const [students, setStudents] = useState([]);
@@ -123,4 +123,4 @@ const EducatorDashboard = () => {
   );
 };
 
-export default EducatorDashboard;
+export default AdminDashboard;

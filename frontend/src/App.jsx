@@ -3,12 +3,13 @@ import {createBrowserRouter,createRoutesFromElements,RouterProvider,Route} from 
 import SignupPage from './Pages/Signup';
 import First from './Pages/First';
 import LoginPage from './Pages/Login';
-import EducatorDashboard from './Pages/Educatordashboard';
+
 import AddCourse from './Pages/Addcourse';
 import VerifyCertificate from './Pages/VerifyCertificate';
 import Certificate from './Pages/Certificate';
 import Home from './Pages/Home';
 import Userdashboard from './Pages/Userdashboard';
+import AdminDashboard from './Pages/Admindashboard';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/educatordashboard" element={<EducatorDashboard />} />
+        <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/addcourse" element={<AddCourse />} />
         <Route path="/certificate" element={<Certificate />} />
         <Route path="/verify-certificate" element={<VerifyCertificate />} />
