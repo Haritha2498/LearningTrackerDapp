@@ -7,6 +7,7 @@ import EducatorDashboard from './Pages/Educatordashboard';
 import AddCourse from './Pages/Addcourse';
 import VerifyCertificate from './Pages/VerifyCertificate';
 import Certificate from './Pages/Certificate';
+import Home from './Pages/Home';
 
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
     createRoutesFromElements(
       <>
         <Route path="/"></Route>
-        <Route index element={<First />} />
+        <Route index element={<Home />} />
         <Route path="/sign-up" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/educatordashboard" element={<EducatorDashboard />} />
