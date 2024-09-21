@@ -43,7 +43,7 @@ const LoginPage = () => {
         if (userType === "admin") 
           return navigate("/educatordashboard");
         else 
-        return navigate("/userdashboard");
+        return navigate("/user");
         
         
       } else {
