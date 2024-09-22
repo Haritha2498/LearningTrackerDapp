@@ -41,7 +41,7 @@ const LoginPage = () => {
         console.log(userType)
 
         if (userType === "admin") 
-          return navigate("/educatordashboard");
+          return navigate("/admindashboard");
         else 
         return navigate("/user");
         

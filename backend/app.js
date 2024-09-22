@@ -2,7 +2,7 @@ const express = require("express");
 const { mongoose } = require("mongoose");
 const app = express();
 const cors = require("cors");
-// const routes = require("./routes/routes.js");
+const routes = require("./routes/routes.js");
 const authRoute=require("./routes/auth.js")
 
 
@@ -18,7 +18,7 @@ app.use(
 
 app.use(express.json());
 
-// app.use("/", routes);
+app.use("/", routes);
 app.use("/",authRoute)
 
 const PORT = 5005;

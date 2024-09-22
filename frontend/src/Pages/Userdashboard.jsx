@@ -3,6 +3,12 @@ import Avatar from "react-avatar";
 import { Line, Pie } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 
+
+import { abi } from "../scdata/Learn.json";
+import { BrowserProvider, Contract } from "ethers";
+import { LearningtrackerdappModule } from "../scdata/deployed_addresses.json";
+
+
 // Register the charts to avoid 'Canvas is already in use' issues
 Chart.register(...registerables);
 
@@ -13,6 +19,16 @@ const Userdashboard = () => {
     date: "",
     file: null,
   });
+
+
+const provider = new BrowserProvider(window.ethereum);
+async function connentToMetamask() {
+  const signer = await provider.getSigner();
+  console.log("signer", signer.address);
+  alert(`MetaMask is connected. Address: ${signer.address}`);
+}
+
+
 
   const [userData] = useState({
     username: "John Doe",
@@ -67,9 +83,31 @@ const Userdashboard = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
     // Handle form submission (e.g., upload to server or blockchain)
+connentToMetamask();
+
+const signer = await provider.getSigner();
+    const instance = new Contract(LearningtrackerdappModule, abi, signer);
+console.log("hdkjfhhg");
+
+    const txl = await instance.addCertificate(
+      certificateDetails.candidateName,
+      certificateDetails.courseTitle,
+      certificateDetails.issuingAuthority,
+      certificateDetails.duration,
+      certificateDetails.issueDate
+    );
+
+
+
+    await txl.wait(); // Wait for the transaction to be mined
+
+    console.log("transaction details:", txl);
+  await submitForApproval(certificateDetails);
+
+
     console.log("Uploading certificate:", certificateDetails);
     // Reset form and hide upload form
     setCertificateDetails({
@@ -105,6 +143,32 @@ const Userdashboard = () => {
       }
     };
   }, []);
+
+
+
+  const submitForApproval = async (certificateDetails) => {
+    try {
+      const response = await fetch("/api/submitcertificate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(certificateDetails),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit for approval");
+      }
+
+      const data = await response.json();
+      console.log("Approval request response:", data);
+    } catch (error) {
+      console.error("Error submitting for approval:", error);
+    }
+  };
+
+
+
 
   return (
     <div className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
