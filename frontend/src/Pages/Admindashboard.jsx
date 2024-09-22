@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { BrowserProvider, Contract } from "ethers";
+import { abi } from "../scdata/Learn.json";
+import { LearningtrackerdappModule } from "../scdata/deployed_addresses.json";
 
 const AdminDashboard = () => {
   const [courses, setCourses] = useState([]);
@@ -6,7 +9,6 @@ const AdminDashboard = () => {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    // Fetch educator's courses, certificates, and enrolled students from API
     fetchCourses();
     fetchCertificates();
     fetchStudents();
@@ -22,12 +24,16 @@ const AdminDashboard = () => {
   };
 
   const fetchCertificates = async () => {
-    // Replace with actual API call
-    const certificatesData = [
-      { id: 1, name: "Blockchain Developer Certification", date: "2023-09-01" },
-      { id: 2, name: "Smart Contracts Expert", date: "2023-08-15" },
-    ];
-    setCertificates(certificatesData);
+    try {
+      const provider = new BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const instance = new Contract(LearningtrackerdappModule, abi, signer);
+      const allCertificates = await instance.getAllCertificates(); // Fetch all certificates from contract
+
+      setCertificates(allCertificates);
+    } catch (error) {
+      console.error("Error fetching certificates:", error);
+    }
   };
 
   const fetchStudents = async () => {
@@ -80,19 +86,25 @@ const AdminDashboard = () => {
 
       {/* Manage Certificates Section */}
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4"> Certificates Providing</h2>
+        <h2 className="text-2xl font-semibold mb-4">Certificates Provided</h2>
         <table className="min-w-full bg-white shadow-md rounded">
           <thead>
             <tr>
               <th className="px-4 py-2">Certificate Name</th>
-              <th className="px-4 py-2">Date Uploaded</th>
+              <th className="px-4 py-2">Candidate Name</th>
+              <th className="px-4 py-2">Issuing Authority</th>
+              <th className="px-4 py-2">Duration</th>
+              <th className="px-4 py-2">Issue Date</th>
             </tr>
           </thead>
           <tbody>
-            {certificates.map((certificate) => (
-              <tr key={certificate.id}>
-                <td className="border px-4 py-2">{certificate.name}</td>
-                <td className="border px-4 py-2">{certificate.date}</td>
+            {certificates.map((certificate, index) => (
+              <tr key={index}>
+                <td className="border px-4 py-2">{certificate.courseTitle}</td>
+                <td className="border px-4 py-2">{certificate.candidateName}</td>
+                <td className="border px-4 py-2">{certificate.issuingAuthority}</td>
+                <td className="border px-4 py-2">{certificate.duration}</td>
+                <td className="border px-4 py-2">{certificate.issueDate}</td>
               </tr>
             ))}
           </tbody>

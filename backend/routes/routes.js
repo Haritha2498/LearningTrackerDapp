@@ -44,6 +44,18 @@ router.post('/submitcertificates', async (req, res) => {
       error: error.message,
     });
   }
+
+// Fetch all certificates
+router.get("/certificates", async (req, res) => {
+  try {
+    const certificates = await Certificate.find().populate('addedBy', 'username');
+    res.json(certificates);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 });
 
 module.exports = router;
