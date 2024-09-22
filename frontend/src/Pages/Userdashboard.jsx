@@ -2,12 +2,9 @@ import React, { useState, useEffect } from "react";
 import Avatar from "react-avatar";
 import { Line, Pie } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
-
-
 import { abi } from "../scdata/Learn.json";
 import { BrowserProvider, Contract } from "ethers";
 import { LearningtrackerdappModule } from "../scdata/deployed_addresses.json";
-
 
 // Register the charts to avoid 'Canvas is already in use' issues
 Chart.register(...registerables);
@@ -15,20 +12,22 @@ Chart.register(...registerables);
 const Userdashboard = () => {
   const [showUploadForm, setShowUploadForm] = useState(false); // State to show/hide upload form
   const [certificateDetails, setCertificateDetails] = useState({
-    name: "",
-    date: "",
-    file: null,
+    courseTitle: "",
+    issuingAuthority: "",
+    candidateName: "",
+    duration: "",
+    issueDate: "",
   });
 
+  const [uploadedCertificates, setUploadedCertificates] = useState([]); // State to hold fetched certificates
 
-const provider = new BrowserProvider(window.ethereum);
-async function connentToMetamask() {
-  const signer = await provider.getSigner();
-  console.log("signer", signer.address);
-  alert(`MetaMask is connected. Address: ${signer.address}`);
-}
+  const provider = new BrowserProvider(window.ethereum);
 
-
+  async function connentToMetamask() {
+    const signer = await provider.getSigner();
+    console.log("signer", signer.address);
+    alert(`MetaMask is connected. Address: ${signer.address}`);
+  }
 
   const [userData] = useState({
     username: "John Doe",
@@ -73,6 +72,7 @@ async function connentToMetamask() {
       },
     ],
   };
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -83,15 +83,13 @@ async function connentToMetamask() {
   };
 
   // Handle form submission
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle form submission (e.g., upload to server or blockchain)
-connentToMetamask();
+    connentToMetamask();
 
-const signer = await provider.getSigner();
+    const signer = await provider.getSigner();
     const instance = new Contract(LearningtrackerdappModule, abi, signer);
-console.log("hdkjfhhg");
-
     const txl = await instance.addCertificate(
       certificateDetails.candidateName,
       certificateDetails.courseTitle,
@@ -100,15 +98,14 @@ console.log("hdkjfhhg");
       certificateDetails.issueDate
     );
 
-
-
     await txl.wait(); // Wait for the transaction to be mined
-
     console.log("transaction details:", txl);
-  await submitForApproval(certificateDetails);
 
+    await submitForApproval(certificateDetails);
 
-    console.log("Uploading certificate:", certificateDetails);
+    // Fetch the certificates again after adding new data
+    await fetchCertificates();
+
     // Reset form and hide upload form
     setCertificateDetails({
       courseTitle: "",
@@ -118,6 +115,21 @@ console.log("hdkjfhhg");
       issueDate: "",
     });
     setShowUploadForm(false);
+  };
+
+  // Fetch certificate data from the blockchain
+  const fetchCertificates = async () => {
+    try {
+      const signer = await provider.getSigner();
+      const instance = new Contract(LearningtrackerdappModule, abi, signer);
+      const certificates = await instance.getCertificates(); // Assuming getCertificates is a function that returns all certificates
+
+      // Assuming the certificates data comes as an array of objects
+      setUploadedCertificates(certificates);
+      console.log("Fetched certificates:", certificates);
+    } catch (error) {
+      console.error("Error fetching certificates:", error);
+    }
   };
 
   // Handle cancel action
@@ -133,6 +145,11 @@ console.log("hdkjfhhg");
     setShowUploadForm(false);
   };
 
+  // Fetch certificates when the component mounts
+  useEffect(() => {
+    fetchCertificates();
+  }, []);
+
   // Destroy charts properly using useEffect
   useEffect(() => {
     return () => {
@@ -143,8 +160,6 @@ console.log("hdkjfhhg");
       }
     };
   }, []);
-
-
 
   const submitForApproval = async (certificateDetails) => {
     try {
@@ -166,9 +181,6 @@ console.log("hdkjfhhg");
       console.error("Error submitting for approval:", error);
     }
   };
-
-
-
 
   return (
     <div className="p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
@@ -244,85 +256,106 @@ console.log("hdkjfhhg");
 
       {/* Upload Certificate Button */}
       <button
-        className="h-8 w-40 bg-black text-white rounded-full hover:bg-gray-900 item-center"
-        onClick={() => setShowUploadForm(true)}
+        className="h-8 w-40 bg-black text-white rounded-full hover:bg-gray-900 item-center mb-5 text-xs"
+        onClick={() => setShowUploadForm(!showUploadForm)}
       >
-        Upload Certificate
+        {showUploadForm ? "Cancel Upload" : "Upload Certificate"}
       </button>
-      {/* Show Upload Certificate Form */}
+
+      {/* Certificate Upload Form */}
       {showUploadForm && (
-        <div className="col-span-3 md:col-span-2 lg:col-span-2 bg-white p-4 shadow-md rounded-lg mt-6">
-          <h3 className="text-lg md:text-xl font-semibold mb-4">
-            Upload Certificate
-          </h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-gray-700">Candidate Name</label>
-              <input
-                type="text"
-                name="candidateName"
-                value={certificateDetails.candidateName}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Course Title</label>
+        <div className="bg-white shadow-md p-6 rounded-md mb-6 col-span-2 md:col-span-1 lg:col-span-2">
+          <h3 className="text-lg font-semibold mb-4">Upload Certificate</h3>
+          <form onSubmit={handleSubmit}>
+            {/* Certificate Form Fields */}
+            <div className="mb-4">
+              <label htmlFor="courseTitle" className="block font-semibold mb-2">
+                Course Title
+              </label>
               <input
                 type="text"
                 name="courseTitle"
+                id="courseTitle"
                 value={certificateDetails.courseTitle}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className="w-full border border-gray-300 p-2 rounded-md"
                 required
               />
             </div>
-            <div>
-              <label className="block text-gray-700">Issuing Authority</label>
+            <div className="mb-4">
+              <label
+                htmlFor="issuingAuthority"
+                className="block font-semibold mb-2"
+              >
+                Issuing Authority
+              </label>
               <input
                 type="text"
                 name="issuingAuthority"
+                id="issuingAuthority"
                 value={certificateDetails.issuingAuthority}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                className="w-full border border-gray-300 p-2 rounded-md"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="candidateName"
+                className="block font-semibold mb-2"
+              >
+                Candidate Name
+              </label>
+              <input
+                type="text"
+                name="candidateName"
+                id="candidateName"
+                value={certificateDetails.candidateName}
+                onChange={handleInputChange}
+                className="w-full border border-gray-300 p-2 rounded-md"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="duration" className="block font-semibold mb-2">
+                Duration
+              </label>
+              <input
+                type="text"
+                name="duration"
+                id="duration"
+                value={certificateDetails.duration}
+                onChange={handleInputChange}
+                className="w-full border border-gray-300 p-2 rounded-md"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="issueDate" className="block font-semibold mb-2">
+                Issue Date
+              </label>
+              <input
+                type="date"
+                name="issueDate"
+                id="issueDate"
+                value={certificateDetails.issueDate}
+                onChange={handleInputChange}
+                className="w-full border border-gray-300 p-2 rounded-md"
                 required
               />
             </div>
 
-            <div>
-              <label className="block text-gray-700">Duration (in weeks)</label>
-              <input
-                type="number"
-                name="duration"
-                value={certificateDetails.duration}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700">Date of Issue</label>
-              <input
-                type="date"
-                name="issueDate"
-                value={certificateDetails.issueDate}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                required
-              />
-            </div>
             <div className="flex space-x-4">
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
+                className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800"
               >
-                Submit
+                Upload Certificate
               </button>
               <button
                 type="button"
+                className="bg-gray-200 px-6 py-2 rounded-md hover:bg-gray-300"
                 onClick={handleCancel}
-                className="px-4 py-2 bg-red-600 text-white rounded-full hover:bg-red-700"
               >
                 Cancel
               </button>
@@ -331,72 +364,35 @@ console.log("hdkjfhhg");
         </div>
       )}
 
-      {/* Certificates Section */}
-      <div className="col-span-2 md:col-span-2 lg:col-span-2">
+      {/* Fetched Certificates Section */}
+      <div className="col-span-2">
         <h3 className="text-lg md:text-xl font-semibold mb-4">
-          Certificates Earned (NFTs)
-        </h3>
-        <div className="grid grid-cols-2 gap-4">
-          {userData.nftCertificates.map((nft, index) => (
-            <div
-              key={index}
-              className="bg-white shadow-md p-4 rounded-lg text-center"
-            >
-              <img
-                src={`https://example.com/nfts/${nft}.png`}
-                alt={nft}
-                className="w-full h-24 md:h-32 object-cover mb-2"
-              />
-              <p className="text-sm md:text-base">{nft}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Tokens and Rewards */}
-      <div className="col-span-1">
-        <h3 className="text-lg md:text-xl font-semibold mb-4">
-          Tokens & Rewards
+          My Certificates
         </h3>
         <div className="space-y-2">
-          <p>
-            Total Tokens Earned: <strong>{userData.tokens}</strong>
-          </p>
-        </div>
-      </div>
-
-      {/* Achievements */}
-      <div className="col-span-1">
-        <h3 className="text-lg md:text-xl font-semibold mb-4">Achievements</h3>
-        <div className="bg-white shadow-md p-4 rounded-lg space-y-2">
-          <p>
-            Digital Badges: <strong>{userData.badges.join(", ")}</strong>
-          </p>
-          <p>
-            Learning Streak: <strong>{userData.learningStreak}</strong> days
-          </p>
-        </div>
-      </div>
-
-      {/* Learning Analytics */}
-      <div className="col-span-2 md:col-span-2 lg:col-span-2">
-        <h3 className="text-lg md:text-xl font-semibold mb-4">
-          Learning Analytics
-        </h3>
-        <div
-          className="bg-white shadow-md p-3 md:p-4 rounded-lg"
-          style={{ width: "200px", height: "200px", margin: "0 auto" }}
-        >
-          <Pie data={categoryData} />
-        </div>
-      </div>
-
-      {/* Notifications */}
-      <div className="col-span-1">
-        <h3 className="text-lg md:text-xl font-semibold mb-4">Notifications</h3>
-        <div className="space-y-2">
-          <p>New NFT earned for React Development Course!</p>
-          <p>React Certification Verified!</p>
+          {uploadedCertificates.length === 0 ? (
+            <p>No certificates uploaded yet.</p>
+          ) : (
+            uploadedCertificates.map((cert, index) => (
+              <div key={index} className="bg-white shadow-md p-3 rounded-md">
+                <p>
+                  <strong>Course Title:</strong> {cert.courseTitle}
+                </p>
+                <p>
+                  <strong>Issuing Authority:</strong> {cert.issuingAuthority}
+                </p>
+                <p>
+                  <strong>Candidate Name:</strong> {cert.candidateName}
+                </p>
+                <p>
+                  <strong>Duration:</strong> {cert.duration}
+                </p>
+                <p>
+                  <strong>Issue Date:</strong> {cert.issueDate}
+                </p>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ contract Learn{
         string candidateName;
         string courseTitle;
         string issuingAuthority;
-        uint256 duration; // Duration in days
+        string duration; // Duration in days
         string issueDate; // Timestamp of the certificate issue date
         address addedBy;
     }
@@ -31,7 +31,7 @@ contract Learn{
         string candidateName,
         string courseTitle,
         string issuingAuthority,
-        uint256 duration,
+        string duration,
         string issueDate,
         address addedBy
     );
@@ -52,7 +52,7 @@ contract Learn{
         string memory _candidateName,
         string memory _courseTitle,
         string memory _issuingAuthority,
-        uint256 _duration,
+        string memory _duration,
         string memory _issueDate
     ) public {
         Certificate memory newCertificate = Certificate({

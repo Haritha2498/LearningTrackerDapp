@@ -110,7 +110,7 @@ const SignupPage = () => {
               className="w-full p-3 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-blue-400 shadow-sm"
             >
               <option value="admin">Admin</option>
-              <option value="educator">Educator</option>
+              <option value="user">User</option>
             </select>
           </div>
           <button
