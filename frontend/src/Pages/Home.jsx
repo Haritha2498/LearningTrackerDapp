@@ -9,18 +9,20 @@ const Home = () => {
   };
 
   return (
-    <div 
-      className="min-h-screen flex flex-col items-center justify-center relative bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-    >
+    <div className="min-h-screen flex flex-col items-center justify-center relative bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
       {/* Background Overlay */}
       <div className="absolute inset-0 bg-black opacity-40"></div>
 
       {/* Header */}
       <header className="absolute top-0 left-0 w-full flex justify-between p-6 z-10">
         <div className="flex items-center space-x-6">
-          <span className="text-2xl font-extrabold text-white tracking-wide">LearnTracker</span>
+          <span className="text-2xl font-extrabold text-white tracking-wide">
+            SkillChain
+          </span>
           <nav className="px-6 py-2 bg-white text-black rounded-full hover:bg-gray-100 transition">
-            <a href="#swap" className="font-medium">Courses</a>
+            <a href="/sign-up" className="font-medium">
+              Courses
+            </a>
           </nav>
         </div>
       </header>
@@ -32,7 +34,8 @@ const Home = () => {
             Empower Your <br /> Learning Journey
           </h1>
           <p className="mt-6 text-lg md:text-2xl text-gray-100">
-            Decentralized learning platform for secure, blockchain-based <br /> certificate issuance and tracking.
+            Decentralized learning platform for secure, blockchain-based <br />{" "}
+            certificate issuance and tracking.
           </p>
         </div>
 
@@ -44,11 +47,11 @@ const Home = () => {
           >
             Get Started
           </button>
-          <button
+          {/* <button
             className="px-8 py-4 bg-white text-black font-semibold rounded-full hover:bg-gray-200 shadow-lg transform hover:scale-105 transition-transform"
           >
             Learn More
-          </button>
+          </button> */}
         </div>
       </main>
 
