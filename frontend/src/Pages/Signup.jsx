@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
 
 const SignupPage = () => {
   const [userName, setUserName] = useState("");
@@ -9,7 +8,6 @@ const SignupPage = () => {
   const [userType, setUserType] = useState("admin");
   const navigate = useNavigate();
 
-  // signup
   const signupSubmit = async (userDetails) => {
     const res = await fetch("/api/register", {
       method: "POST",
@@ -18,12 +16,9 @@ const SignupPage = () => {
       },
       body: JSON.stringify(userDetails),
     });
-    console.log(res);
     if (res.ok) {
-      //   toast.success(`Signup success`);
       return navigate("/login");
     } else {
-      //   toast.error(`Please check the input data`);
       return navigate("/sign-up");
     }
   };
@@ -36,92 +31,83 @@ const SignupPage = () => {
       email,
       userType,
     };
-
     signupSubmit(userDetails);
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md">
-        <h2 className="text-4xl font-extrabold text-center text-blue-500 mb-6">
-          Create Account
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-400 via-purple-500 to-pink-400">
+      <div className="bg-white shadow-2xl rounded-2xl p-8 md:p-12 lg:p-16 max-w-lg w-full relative">
+        {/* Decorative shapes */}
+        <div className="absolute top-0 right-0 transform translate-x-8 -translate-y-8 h-32 w-32 bg-indigo-500 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute bottom-0 left-0 transform -translate-x-8 translate-y-8 h-32 w-32 bg-pink-500 rounded-full filter blur-3xl opacity-30"></div>
+
+        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
+          Create Your Account
         </h2>
-        <form onSubmit={submitForm}>
-          <div className="mb-6">
-            <label
-              htmlFor="name"
-              className="block text-gray-600 font-medium mb-2"
-            >
-              Name
-            </label>
+
+        <form onSubmit={submitForm} className="space-y-6">
+          <div className="relative">
             <input
               type="text"
               id="name"
               name="name"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-blue-400 shadow-sm"
+              className="w-full px-6 py-4 border-none rounded-full shadow-md focus:ring-2 focus:ring-purple-500 text-gray-900 placeholder-gray-400 bg-gray-100 focus:outline-none transition duration-200 ease-in-out"
+              placeholder="Enter your name"
+              required
             />
           </div>
-          <div className="mb-6">
-            <label
-              htmlFor="email"
-              className="block text-gray-600 font-medium mb-2"
-            >
-              Email
-            </label>
+
+          <div className="relative">
             <input
               type="email"
               id="email"
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-blue-400 shadow-sm"
+              className="w-full px-6 py-4 border-none rounded-full shadow-md focus:ring-2 focus:ring-purple-500 text-gray-900 placeholder-gray-400 bg-gray-100 focus:outline-none transition duration-200 ease-in-out"
+              placeholder="Enter your email"
+              required
             />
           </div>
-          <div className="mb-6">
-            <label
-              htmlFor="password"
-              className="block text-gray-600 font-medium mb-2"
-            >
-              Password
-            </label>
+
+          <div className="relative">
             <input
               type="password"
               id="password"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-blue-400 shadow-sm"
+              className="w-full px-6 py-4 border-none rounded-full shadow-md focus:ring-2 focus:ring-purple-500 text-gray-900 placeholder-gray-400 bg-gray-100 focus:outline-none transition duration-200 ease-in-out"
+              placeholder="Create a password"
+              required
             />
           </div>
-          <div className="mb-6">
-            <label
-              htmlFor="userType"
-              className="block text-gray-600 font-medium mb-2"
-            >
-              User Type
-            </label>
+
+          <div className="relative">
             <select
               id="userType"
               name="userType"
               value={userType}
               onChange={(e) => setUserType(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-blue-400 shadow-sm"
+              className="w-full px-6 py-4 border-none rounded-full shadow-md focus:ring-2 focus:ring-purple-500 text-gray-900 placeholder-gray-400 bg-gray-100 focus:outline-none transition duration-200 ease-in-out"
             >
               <option value="admin">Admin</option>
               <option value="user">User</option>
             </select>
           </div>
+
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition-all duration-200 ease-in-out"
+            className="w-full py-4 bg-purple-500 text-white rounded-full shadow-lg hover:bg-purple-600 transition duration-300 ease-in-out font-semibold text-lg"
           >
             Sign Up
           </button>
-          <p className="text-center text-gray-600 mt-6">
+
+          <p className="text-center text-gray-600 mt-4">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-500 hover:underline">
+            <Link to="/login" className="text-purple-500 hover:underline">
               Login
             </Link>
           </p>

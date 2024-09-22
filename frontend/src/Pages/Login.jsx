@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BrowserProvider } from "ethers";
-// import { toast } from "react-toastify";
-// import jwtDecode from "jwt-decode"; (Uncomment this if you have jwt-decode installed)
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -11,22 +9,14 @@ const LoginPage = () => {
 
   const loginSubmit = async (e) => {
     e.preventDefault();
-    const loginDetails = {
-      email,
-      password,
-    };
+    const loginDetails = { email, password };
 
     try {
-      // Connection to MetaMask
       const provider = new BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       console.log("Connected with MetaMask. Address:", signer.address);
       alert(`MetaMask is connected. Address: ${signer.address}`);
 
-      // const userType = data.userType;
-      // console.log(userType)
-
-      // Handle login
       const res = await fetch("/api/login", {
         method: "POST",
         headers: {
@@ -38,16 +28,9 @@ const LoginPage = () => {
       if (res.ok) {
         const data = await res.json();
         const userType = data.userType;
-        console.log(userType)
-
-        if (userType === "admin") 
-          return navigate("/admindashboard");
-        else 
-        return navigate("/user");
-        
-        
+        if (userType === "admin") return navigate("/admindashboard");
+        else return navigate("/user");
       } else {
-        // toast.error("Please check your credentials");
         return navigate("/");
       }
     } catch (err) {
@@ -57,58 +40,50 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md">
-        <h2 className="text-4xl font-extrabold text-center text-blue-500 mb-6">
-          Login
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500">
+      <div className="bg-white shadow-lg rounded-2xl p-8 md:p-12 w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Welcome Back
         </h2>
-        <form onSubmit={loginSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Email:
-            </label>
+        <form onSubmit={loginSubmit} className="space-y-6">
+          <div className="relative">
             <input
               type="text"
               id="email"
               name="email"
-              className="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-6 py-4 border border-gray-300 rounded-full shadow-lg focus:ring-2 focus:ring-blue-400 bg-gray-50 placeholder-gray-500 transition duration-200 ease-in-out"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
-          <div className="mb-6">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 font-bold mb-2"
-            >
-              Password:
-            </label>
+          <div className="relative">
             <input
               type="password"
               id="password"
               name="password"
-              className="w-full px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-6 py-4 border border-gray-300 rounded-full shadow-lg focus:ring-2 focus:ring-blue-400 bg-gray-50 placeholder-gray-500 transition duration-200 ease-in-out"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <div className="flex items-center justify-between mb-6">
             <button
               type="submit"
-              className="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="w-full bg-blue-600 text-white py-3 rounded-full shadow-md hover:bg-blue-700 transition duration-300 ease-in-out"
             >
               Login
             </button>
-            <Link to="#" className="text-blue-700 hover:underline">
+            {/* <Link to="#" className="text-blue-600 hover:underline">
               Forgot Password?
-            </Link>
+            </Link> */}
           </div>
-          <p className="text-center">
+          <p className="text-center text-gray-600">
             Don't have an account?{" "}
-            <Link to="/sign-up" className="text-blue-700 hover:underline">
+            <Link to="/sign-up" className="text-blue-600 hover:underline">
               Sign Up
             </Link>
           </p>
@@ -118,21 +93,4 @@ const LoginPage = () => {
   );
 };
 
-const getUserType = () => {
-  const authToken = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("Authtoken"))
-    ?.split("=")[1];
-
-  if (authToken) {
-    // If jwtDecode is available, decode the token
-    const decoded = jwtDecode(authToken);
-    console.log("decoded", decoded);
-    return decoded.userType;
-
-    return "admin"; // Dummy return for now
-  }
-  return null;
-};
-
-export { LoginPage as default, getUserType };
+export default LoginPage;
