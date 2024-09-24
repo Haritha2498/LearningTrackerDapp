@@ -42,6 +42,14 @@ The platform is currently in development. Users can enter certificate details, w
 
 ---
 
+
+## :video_camera: Demo ##
+Watch demo vedio:<br>
+<a href="https://drive.google.com/file/d/1CZrqYlNZ9nLJWrE3WXzM1q9WaqesdyoP/view?usp=sharing">
+    <img src="https://github.com/Haritha2498/LearningTrackerDapp/blob/main/frontend/src/assets/images/img.png" alt="demo video" width="300" height="200" />
+</a>
+
+
 ## ⚙️ Running the Project
 
 To run the project, clone the repository and change into the directory:
