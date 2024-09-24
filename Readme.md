@@ -46,7 +46,7 @@ The platform is currently in development. Users can enter certificate details, w
 
 To run the project, clone the repository and change into the directory:
 
-
+```bash
 git clone git@github.com:Haritha2498/LearningTrackerDapp.git
 cd LearningTrackerDapp
 
@@ -86,6 +86,8 @@ npx hardhat node
 To deploy, in another terminal:
 npx hardhat compile
 npx hardhat ignition deploy ignition/modules/Learn.js
+
+```
 
 ## 🤝 Contributing
 
